@@ -9,7 +9,7 @@ note: you need to remove `PySide6` on host, otherwise it'll act funny
 
 # How to run
 ```
-python -i plant.py
+python -i kangkong_model.py
 ```
 # ToDos
 

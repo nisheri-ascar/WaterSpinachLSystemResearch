@@ -4,13 +4,18 @@ IMAGE_OUTPUT=""
 
 def model_bottlepot():
     scene = Scene()
-    bottlePot_Shape = Cylinder(1, 5)
-    bottlePot_ColorFirst = Color3(255,0,0)
-    bottlePot_ColorSecond = Color3(0,0,0)
-    bottlePot_ColorThird = Color3(0,0,0)
+
+    # Physical properties
+    radius = 0.4
+    height = 0.5
+    # Color properties
+    ambient = Color3(255,0,0)
+    diffuse = 1.0
+    specular = Color3(0,0,0)
     bottlePot_Opacity = 1.0
     #bottlePot_WholeColor = Material(bottlePot_ColorFirst, bottlePot_ColorSecond, bottlePot_ColorThird, bottlePot_Opacity, 0)
     # Self note: Material(ambient, diffuse, specular, opacity and something..?)
+    shape = Cylinder(radius, height, caps)
     bottlePot_WholeColor = Material(Color3(255,0,0))
     
     bottlePot_RenderableObject = Shape(bottlePot_Shape, bottlePot_WholeColor)

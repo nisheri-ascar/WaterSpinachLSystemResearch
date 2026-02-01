@@ -1,9 +1,5 @@
-"""
-
-self notes:
-  nerve: curviness of the leaf in 3d space
-  
-"""
+# Third Treatment
+# Todo: make the interpretation modular and reusable across all treatment code, right now we are still doing naive model only.
 
 
 from openalea.plantgl.all import *
@@ -19,23 +15,29 @@ midrib_separation = 10
 
 phi = 180      # Phyllotactic angle
 h = 1     # height of an internode
+L_ungrownstem = 4
+L0_ungrownstem = 4
 
-
-Axiom: F!(0.05)F[-(20)FFF-(10)A(1)][+(20)FFFA(2)]FFFFFFFFA(3)
+Axiom: F!(0.05)F[-(20)FFF-(10)@Dd(1)A(1)][+(20)FFF@Dd(1)A(2)]FFFFF[+//!(0.02)SetGuide(c0_ungrown_stem, L0_ungrownstem) nF(L_ungrownstem, 0.1)]FF+(20)[FF+(20)/(10)@Dd(1)B(3)]-(20)FFFB(5) # Honestly i still have no idea what the fuck is that parameters for A & B
+# Todo: make ungrown stem have its own module
 
 derivation length: 1
 production:
 
 A(n):
   produce [^(20)Leaf(scaling)] 
+  
+B(n):
+  produce [^(20)Leaf_single(scaling)] 
  
 interpretation:
-# Leaf(x) --> ;(2)_(0.05)F(0.1)[+(midrib_separation)Sweep(nerve,section,length,dl,x,width)][-(midrib_separation)Sweep(nerve,section,length,dl,x,width)]
+
 Leaf(x) --> ;(2)_(0.05)F(0.1)[+(midrib_separation)Sweep(nerve,section,length,dl,x,width_left)][/-(midrib_separation)Sweep(nerve,section,length,dl,x,width_right)]
 
+Leaf_single(x) --> ;(2)_(0.05)F(0.1)[Sweep(nerve,section_single,length,dl,x,width_single)]
 
 A(n) --> ;(2) @O(0.2)
-
+B(n) --> ;(2) @O(0.2)
 
 endlsystem
 ###### INITIALISATION ######
@@ -50,16 +52,6 @@ def __initialiseContext__(context):
 	Color_2 = pgl.Material("Color_2" , ambient = (66,92,5) , diffuse = 1.95652 , shininess = 0.26 , )
 	Color_2.name = "Color_2"
 	context.turtle.setMaterial(2,Color_2)
-	Color_3 = pgl.Material("Color_3" , ambient = (60,60,15) , diffuse = 3 , )
-	Color_3.name = "Color_3"
-	context.turtle.setMaterial(3,Color_3)
-	Color_4 = pgl.Material("Color_4" , ambient = (0,0,60) , diffuse = 3 , )
-	Color_4.name = "Color_4"
-	context.turtle.setMaterial(4,Color_4)
-	Color_5 = pgl.Material("Color_5" , ambient = (60,0,60) , diffuse = 3 , )
-	Color_5.name = "Color_5"
-	context.turtle.setMaterial(5,Color_5)
-	context.animation_timestep = 1.839
 	import openalea.plantgl.all as pgl
 	width_left = pgl.NurbsCurve2D(	
 	    ctrlPointList = pgl.Point3Array([(0, 0.0311929, 1),(0.0991906, 0.222846, 1),(0.200979, 0.159086, 1),(0.648978, 0.184865, 1),(0.854868, 0.107171, 1),(1, 0.0243861, 1)]) , 

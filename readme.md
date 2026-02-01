@@ -1,17 +1,35 @@
-# kangkong on plantgl research
+# Water Spinach Research with Lindenmayer Systems | LPy
 
-to install:
-`conda create -n pgl openalea.plantgl -c openalea3 -c conda-forge`
+# Pre-installation
+## For Windows
+- Install [Git](https://git-scm.com/install/windows)
+- Install Conda
 
-`conda activate pgl`
+## For Linux
+Needs git and conda through miniconda3.
 
-note: you need to remove `PySide6` on host, otherwise it'll act funny
+# Installation
+Open your terminal and run both
 
-# How to run
+`conda create -n lpy openalea.lpy -c openalea3 -c conda-forge`
+
+Once installed, run:
+`conda activate lpy`
+
+and then:
+`lpy`
+
+It should open an GUI, everything here should be pretty self-explanatory
+
+*note: you only have to use the `create` command once, but to run `lpy` you have to activate it.*
+
+# Getting the models and other code
+
+- verify you have git properly installed with `git --version`
+- run `git clone https://github.com/nisheri-ascar/WaterSpinachLSystemResearch`
+- LPy should able to access the files with no problem
+
+## To fetch changes
 ```
-python -i kangkong_model.py
+git pull
 ```
-# ToDos
-
-- [ ] figure out how to actualy get interactive move working
-- [ ] arrange how the files

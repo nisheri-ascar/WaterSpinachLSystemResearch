@@ -1,0 +1,118 @@
+# Third Treatment
+# Todo: make the interpretation modular and reusable across all treatment code, right now we are still doing naive model only.
+
+
+from openalea.plantgl.all import *
+from math import * 
+
+module Leaf
+
+length = 5   # in some units (= cm for example)
+dl = 0.01
+scaling = 3   # to dilate/contract the leaf
+midrib_separation = 10
+
+
+phi = 180      # Phyllotactic angle
+h = 1     # height of an internode
+L_ungrownstem = 4
+L0_ungrownstem = 4
+
+Axiom: F!(0.05)F[-(20)FFF-(10)@Dd(1)A(1)][+(20)FFF@Dd(1)A(2)]FFFFF[+//!(0.02)SetGuide(c0_ungrown_stem, L0_ungrownstem) nF(L_ungrownstem, 0.1)]FF+(20)[FF+(20)/(10)@Dd(1)B(3)]-(20)FFFB(5) # Honestly i still have no idea what the fuck is that parameters for A & B
+# Todo: make ungrown stem have its own module
+
+derivation length: 1
+production:
+
+A(n):
+  produce [^(20)Leaf(scaling)] 
+  
+B(n):
+  produce [^(20)Leaf_single(scaling)] 
+ 
+interpretation:
+
+Leaf(x) --> ;(2)_(0.05)F(0.1)[+(midrib_separation)Sweep(nerve,section,length,dl,x,width_left)][/-(midrib_separation)Sweep(nerve,section,length,dl,x,width_right)]
+
+Leaf_single(x) --> ;(2)_(0.05)F(0.1)[Sweep(nerve,section_single,length,dl,x,width_single)]
+
+A(n) --> ;(2) @O(0.2)
+B(n) --> ;(2) @O(0.2)
+
+endlsystem
+###### INITIALISATION ######
+
+__lpy_code_version__ = 1.1
+
+def __initialiseContext__(context):
+	import openalea.plantgl.all as pgl
+	Color_1 = pgl.Material("Color_1" , ambient = (111,126,33) , diffuse = 1.42857 , )
+	Color_1.name = "Color_1"
+	context.turtle.setMaterial(1,Color_1)
+	Color_2 = pgl.Material("Color_2" , ambient = (66,92,5) , diffuse = 1.95652 , shininess = 0.26 , )
+	Color_2.name = "Color_2"
+	context.turtle.setMaterial(2,Color_2)
+	Color_3 = pgl.Material("Color_3" , ambient = (60,60,15) , diffuse = 3 , )
+	Color_3.name = "Color_3"
+	context.turtle.setMaterial(3,Color_3)
+	Color_4 = pgl.Material("Color_4" , ambient = (0,0,60) , diffuse = 3 , )
+	Color_4.name = "Color_4"
+	context.turtle.setMaterial(4,Color_4)
+	Color_5 = pgl.Material("Color_5" , ambient = (60,0,60) , diffuse = 3 , )
+	Color_5.name = "Color_5"
+	context.turtle.setMaterial(5,Color_5)
+	context.animation_timestep = 1.839
+	scalars = [('Initialize_Variables', 'Category'), ('init_height', 'Float', 0.0, 0.0, 99.99, 2), ('init_biomass', 'Float', 1.0, 0.0, 99.99, 2), ('init_leafarea', 'Float', 1.0, 0.0, 99.99, 2), ('Final_Variables', 'Category'), ('final_height', 'Float', 0.0, 0.0, 99.99, 2), ('final_biomass', 'Float', 1.0, 0.0, 99.99, 2), ('final_leafarea', 'Float', 1.0, 0.0, 99.99, 2), ('soil_init', 'Category'), ('init_carbon', 'Float', 1.0, 0.0, 99.99, 2), ('init_calcium', 'Float', 1.0, 0.0, 99.99, 2), ('kjedahl_nitrogen', 'Float', 1.0, 0.0, 99.99, 2), ('phosphorus', 'Float', 1.0, 0.0, 99.99, 2), ('sodium', 'Float', 1.0, 0.0, 99.99, 2), ('calcium', 'Float', 1.0, 0.0, 99.99, 2), ('magnesium', 'Float', 1.0, 0.0, 99.99, 2), ('manganese', 'Float', 1.0, 0.0, 99.99, 2), ('zinc', 'Float', 1.0, 0.0, 99.99, 2), ('copper', 'Float', 1.0, 0.0, 99.99, 2), ('chromium', 'Float', 1.0, 0.0, 99.99, 2), ('nickel', 'Float', 1.0, 0.0, 99.99, 2), ('lead', 'Float', 1.0, 0.0, 99.99, 2), ('cadmium', 'Float', 1.0, 0.0, 99.99, 2)]
+	context["__scalars__"] = scalars
+	for s in scalars:
+		if not s[1] == "Category" : context[s[0]] = s[2]
+	import openalea.plantgl.all as pgl
+	width_left = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(0, 0.0311929, 1),(0.0991906, 0.222846, 1),(0.200979, 0.159086, 1),(0.648978, 0.184865, 1),(0.854868, 0.107171, 1),(1, 0.0243861, 1)]) , 
+	    stride = 36 , 
+	    )
+	width_left.name = "width_left"
+	import openalea.plantgl.all as pgl
+	nerve = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(-0.5, 0, 1),(-0.244461, 0.0372671, 1),(0.121756, -0.029734, 1),(0.451834, -0.0107819, 1)]) , 
+	    )
+	nerve.name = "nerve"
+	section = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(-0.5, 0, 1),(-0.29979, -0.110154, 1),(-0.0622408, 0.139037, 1),(0.5, 0, 1)]) , 
+	    stride = 34 , 
+	    )
+	section.name = "section"
+	width_right = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(0, 0.0311929, 1),(0.103633, 0.0345376, 1),(0.200979, 0.159086, 1),(0.648978, 0.184865, 1),(0.854868, 0.107171, 1),(1, 0.0243861, 1)]) , 
+	    stride = 36 , 
+	    )
+	width_right.name = "width_right"
+	width_single = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(0, 0.0368034, 1),(0.321038, 0.20082, 1),(0.674863, 0.127049, 1),(1, 0.00418017, 1)]) , 
+	    )
+	width_single.name = "width_single"
+	nerve_single = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(-0.5, 0, 1),(-0.223915, 0.114315, 1),(0.121756, 0.0370409, 1),(0.467244, -0.216243, 1)]) , 
+	    )
+	nerve_single.name = "nerve_single"
+	section_single = pgl.NurbsCurve2D(	
+	    ctrlPointList = pgl.Point3Array([(-0.5, 0, 1),(-0.195355, -0.24554, 1),(0.203326, -0.162142, 1),(0.5, 0, 1)]) , 
+	    )
+	section_single.name = "section_single"
+	c0_ungrown_stem = pgl.BezierCurve2D(	
+	    pgl.Point3Array([(-0.5, 0, 1),(-0.380963, -0.180649, 1),(-0.0534684, -0.0188563, 1),(0.0171664, 0.107867, 1)]) , 
+	    )
+	c0_ungrown_stem.name = "c0_ungrown_stem"
+	panel_0 = ({'name': 'Panel 1', 'active': True, 'visible': True},[('Function',width_left),('Curve2D',nerve),('Curve2D',section),('Function',width_right),('Function',width_single),('Curve2D',nerve_single),('Curve2D',section_single),('Curve2D',c0_ungrown_stem)])
+	parameterset = [panel_0,]
+	context["__functions__"] = [('width_left',width_left),('width_right',width_right),('width_single',width_single),]
+	context["__curves__"] = [('nerve',nerve),('section',section),('nerve_single',nerve_single),('section_single',section_single),('c0_ungrown_stem',c0_ungrown_stem),]
+	context["__parameterset__"] = parameterset
+	context["width_left"] = pgl.QuantisedFunction(width_left)
+	context["nerve"] = nerve
+	context["section"] = section
+	context["width_right"] = pgl.QuantisedFunction(width_right)
+	context["width_single"] = pgl.QuantisedFunction(width_single)
+	context["nerve_single"] = nerve_single
+	context["section_single"] = section_single
+	context["c0_ungrown_stem"] = c0_ungrown_stem
